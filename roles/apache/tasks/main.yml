@@ -1,0 +1,6 @@
+---
+# tasks file for apache
+- name: Install Apache Web server
+  ansible.builtin.apt:
+    package: apache2
+    state: present

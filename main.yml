@@ -1,0 +1,13 @@
+---
+- name: Automate the setup of a virtual machine running Ubuntu serer
+  hosts: all
+  become: true
+
+  pre_tasks:
+    - name: Update the APT package cache
+      ansible.builtin.apt:
+        update-cache: true
+        cache_valid_time: 3600
+
+  roles:
+    - apache

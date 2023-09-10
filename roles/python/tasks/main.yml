@@ -1,0 +1,40 @@
+---
+# tasks file for python
+- name: Install the required APT packages for Python
+  ansible.builtin.apt:
+    package:
+      - python3-venv
+      - python3-pip
+      - tree
+    state: present
+
+- name: Change the active directory to /var/www/api/v1
+  ansible.builtin.command:
+    become: true
+    creates: /var/www/api/v1
+    chdir: /var/www/api/v1
+
+- name: Print the current working directory to the console
+  ansible.builtin.command:
+    cmd: pwd
+    register: curdir
+
+- debug:
+    msg: "The current working directory is {{curdir.stdout}}"
+
+- name: Setup a Python3 virtual environment
+  # We are already changing the current working directory
+  # to /var/www/api/v1 earlier
+  become: true
+  ansible.builtin.shell: python3 -m venv .venv
+
+- name: Activate the virtual environment
+  become: true
+  ansible.builtin.shell: source .venv/bin/activate
+
+- name: Copy the requirements.txt file for the project
+  ansible.builtin.copy:
+    backup: true
+    dest: /var/www/api/v1
+    src:
+    mode: '744'
